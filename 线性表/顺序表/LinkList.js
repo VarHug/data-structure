@@ -55,9 +55,9 @@ LinkListClass.prototype.createListR = function (split) {
 LinkListClass.prototype.dispList = function () {
     let str = '',
         cur = this.head.next;
-    if (!cur) {
+    if (cur) {
         while (cur !== null) {
-            str += cur.data;
+            str += cur.data + ' ';
             cur = cur.next;
         }
     }
@@ -80,7 +80,7 @@ LinkListClass.prototype.listLength = function () {
  * 求单链表中某个数据元素值
  * @returns string
  */
-LinkListClass.prototype.getElem = function () {
+LinkListClass.prototype.getElem = function (i) {
     let j = 0,
         cur = this.head;
     while (j < i && cur !== null) {
@@ -116,7 +116,7 @@ LinkListClass.prototype.locateElem = function (e) {
  * @returns boolean
  */
 LinkListClass.prototype.listInsert = function (i, e) {
-    let i = 0, s, p;
+    let j = 0, s, p;
     if (i < 1) {
         return false;
     }
@@ -165,6 +165,7 @@ LinkListClass.prototype.listDelete = function (i) {
 };
 /**
  * 将单链表递增排序（插入排序）
+ * @returns {LinkList} this.head
  */
 LinkListClass.prototype.sort = function () {
     let p, pre, q, collator = Intl.Collator();
@@ -179,6 +180,7 @@ LinkListClass.prototype.sort = function () {
         }
         p.next = pre.next;
         pre.next = p;
-        q = p; 
+        p = q; 
     }
+    return this.head;
 };
