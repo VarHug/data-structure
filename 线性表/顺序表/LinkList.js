@@ -91,3 +91,94 @@ LinkListClass.prototype.getElem = function () {
         return cur.data;
     }
 };
+/**
+ * 按元素值查找元素序号
+ * @param {string} e 
+ * @returns num
+ */
+LinkListClass.prototype.locateElem = function (e) {
+    let i = 1,
+        p = this.head.next;
+    while (p !== null && p.data !== e) {
+        p = p.next;
+        i++;
+    }
+    if (p === null) {
+        return 0;
+    } else {
+        return i;
+    }
+};
+/**
+ * 插入数据元素
+ * @param {num} i 
+ * @param {string} e 
+ * @returns boolean
+ */
+LinkListClass.prototype.listInsert = function (i, e) {
+    let i = 0, s, p;
+    if (i < 1) {
+        return false;
+    }
+    p = this.head;
+    while (j < i - 1 && p !== null) {
+        j++;
+        p = p.next;
+    }
+    if (p === null) {
+        return false;
+    } else {
+        s = new LinkList();
+        s.data = e;
+        s.next = p.next;
+        p.next = s;
+        return true;
+    }
+};
+/**
+ * 删除数据元素
+ * @param {num} i 
+ * @returns 
+ */
+LinkListClass.prototype.listDelete = function (i) {
+    let j = 0, q, p;
+    if (i < 1) {
+        return false;
+    }
+    p = this.head;
+    while (i < j - 1 && p !== null) {
+        j++;
+        p = p.next;
+    }
+    if (p === null) {
+        return false;
+    } else {
+        q = p.next;
+        if (q === null) {
+            return false;
+        }
+        let e = q.data;
+        p.next = q.next;
+        q = null;
+        return e;
+    }
+};
+/**
+ * 将单链表递增排序（插入排序）
+ */
+LinkListClass.prototype.sort = function () {
+    let p, pre, q, collator = Intl.Collator();
+    q = this.head.next;
+    p = this.head.next.next;
+    q.next = null;
+    while (p !== null) {
+        q = p.next;
+        pre = this.head;
+        while (pre.next !== null && collator.compare(pre.next.data, p.data) < 0) {
+            pre = pre.next;
+        }
+        p.next = pre.next;
+        pre.next = p;
+        q = p; 
+    }
+};
