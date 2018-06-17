@@ -14,55 +14,47 @@ var Node = function (val) {
  */
 var BinaryTree = function (dataArray) {
   this.root = null;
-  this._init(dataArray);
-};
+  let _this_ = this;
+  _init(dataArray);
 
-/**
- * 初始化二叉排序树方法
- * @param {Array} dataArray
- */
-BinaryTree.prototype._init = function (dataArray) {
-  if (dataArray.length < 0) {
-    return;
+  function _init (dataArray) {
+    if (dataArray.length < 0) {
+      return;
+    }
+    dataArray.forEach((item) => {
+      _this_.insert(item);
+    });
   }
-  dataArray.forEach((item) => {
-    this.insert(item);
-  });
 };
 
 /**
- * 暴露的插入结点方法
+ * 插入结点方法
  * @param {Number} val
  */
 BinaryTree.prototype.insert = function (val) {
   if (this.root === null) {
     this.root = new Node(val);
   } else {
-    this._insertNode(this.root, val);
+    _insertNode(this.root, val);
   }
-};
 
-/**
- * 内部递归插入结点方法
- * @param {Node} node
- * @param {Number} newVal
- */
-BinaryTree.prototype._insertNode = function (node, newVal) {
-  if (newVal === node.val) {
-    return;
-  } else if (newVal < node.val) {
-    if (node.lchild === null) {
-      node.lchild = new Node(newVal);
+  function _insertNode (node, newVal) {
+    if (newVal === node.val) {
+      return;
+    } else if (newVal < node.val) {
+      if (node.lchild === null) {
+        node.lchild = new Node(newVal);
+      } else {
+        _insertNode(node.lchild, newVal);
+      }
     } else {
-      this._insertNode(node.lchild, newVal);
+      if (node.rchild === null) {
+        node.rchild = new Node(newVal);
+      } else {
+        _insertNode(node.rchild, newVal);
+      }
     }
-  } else {
-    if (node.rchild === null) {
-      node.rchild = new Node(newVal);
-    } else {
-      this._insertNode(node.rchild, newVal);
-    }
-  }
+  };
 };
 
 /**
@@ -111,6 +103,122 @@ BinaryTree.prototype.postOrder = function (callback) {
       callback(node.val);
     }
   };
+};
+
+/**
+ * 查找二叉树中的最小值
+ */
+BinaryTree.prototype.findMin = function () {
+  return _minNode(this.root);
+
+  function _minNode(node) {
+    if (node) {
+      while (node && node.lchild !== null) {
+        node = node.lchild;
+      }
+
+      return node.val;
+    }
+
+    return null;
+  }
+};
+
+/**
+ * 查找二叉树中的最大值
+ */
+BinaryTree.prototype.findMax = function () {
+  return _maxNode(this.root);
+
+  function _maxNode(node) {
+    if (node) {
+      while (node && node.rchild !== null) {
+        node = node.rchild;
+      }
+
+      return node.val;
+    }
+
+    return null;
+  }
+};
+
+/**
+ * 查找结点
+ * @param {Number} data
+ */
+BinaryTree.prototype.findNode = function (data) {
+  return _findNode(this.root, data);
+
+  function _findNode (node, data) {
+    if (node) {
+      if (data < node.val) {
+        return _findNode(node.lchild, data);
+      } else if (data > node.val) {
+        return _findNode(node.rchild, data);
+      } else {
+        return true;
+      }
+    } else {
+      return false;
+    }
+  }
+};
+
+/**
+ * 删除结点
+ * @param {Number} data
+ */
+BinaryTree.prototype.removeNode = function (data) {
+  this.root = _removeNode(this.root, data);
+  return this.root;
+
+  function _removeNode(node, data) {
+    if (node) {
+      if (data < node.val) {
+        node.lchild = _removeNode(node.lchild, data);
+        return node;
+      } else if (data > node.val) {
+        node.rchild = _removeNode(node.rchild, data);
+        return node;
+      } else {
+        // 叶子结点
+        if (node.lchild === null && node.rchild === null) {
+          node = null;
+          return node;
+        }
+        // 无左孩子有右孩子
+        if (node.lchild === null) {
+          node = node.rchild;
+          return node;
+        }
+        // 有左孩子无右孩子
+        if (node.rchild === null) {
+          node = node.lchild;
+          return node;
+        }
+        // 左右孩子都有
+        let minNode = _findMinNode(node.rchild);
+        node.val = minNode.val;
+        node.rchild = _removeNode(node.rchild, minNode.val);
+        return node;
+      }
+    } else {
+      return null;
+    }
+  }
+
+  function _findMinNode(node) {
+    if (node) {
+      while (node && node.lchild !== null) {
+        node = node.lchild;
+      }
+
+      return node;
+    }
+
+    return null;
+  }
 };
 
 // var nodes = [8, 3, 10, 1, 6, 14, 4, 7, 13];
